@@ -57,11 +57,23 @@
     NSString* newSchemeFile = [[[schemeFile stringByDeletingLastPathComponent] stringByAppendingPathComponent:projName] stringByAppendingPathExtension:@"xcscheme"];
     [fm moveItemAtPath:schemeFile toPath:newSchemeFile error:NULL];
     
+    // Update Android scheme
+    [self setName:projName inFile:[xcodeFileName stringByAppendingPathComponent:@"xcshareddata/xcschemes/PROJECTNAME-android.xcscheme"]];
+    
+    // Rename Android scheme file
+    NSString* androidSchemeFile = [xcodeFileName stringByAppendingPathComponent:@"xcshareddata/xcschemes/PROJECTNAME-android.xcscheme"];
+    NSString* newAndroidSchemeFile = [[schemeFile stringByDeletingLastPathComponent] stringByAppendingPathComponent:[[projName stringByAppendingString:@"-android"] stringByAppendingPathExtension:@"xcscheme"]];
+    [fm moveItemAtPath:androidSchemeFile toPath:newAndroidSchemeFile error:NULL];
+    
     // Rename Xcode project file
     NSString* newXcodeFileName = [[[xcodeFileName stringByDeletingLastPathComponent] stringByAppendingPathComponent:projName] stringByAppendingPathExtension:@"xcodeproj"];
     
     [fm moveItemAtPath:xcodeFileName toPath:newXcodeFileName error:NULL];
-    
+
+    // Update Android package and run scripts
+    [self setName:projName inFile:[[fileName stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"package-apk.py"]];
+    [self setName:projName inFile:[[fileName stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"run.py"]];
+
     // Rename Approj project file (apportable)
     NSString* approjFileName = [[fileName stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"PROJECTNAME.approj"];
     projName = [[fileName lastPathComponent] stringByDeletingPathExtension];

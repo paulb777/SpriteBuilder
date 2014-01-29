@@ -1,0 +1,34 @@
+//
+//  ApportableBase.xcconfig
+//
+//  Created by Paul Beusterien on 1/24/14.
+//  Copyright (c) 2014 Apportable. All rights reserved.
+//
+
+APPORTABLE_SDK = $HOME/.apportable/SDK
+
+VALID_ARCHS = armv7
+
+DEBUG_INFORMATION_FORMAT = dwarf
+
+GCC_VERSION = com.apportable.compilers.clang
+
+OTHER_LDFLAGS = --apportable-link -lv -lcxx -lSystem -licu -lCoreFoundation -lffi -lCommonCrypto -lSecurity -lSystemConfiguration -lBridgeKit -lCFNetwork -lAVFoundation -lOpenAL -lCoreText -lCoreAudio -lAudioFile -lAudioUnit -lAudioToolbox -lGLESv2
+
+EXECUTABLE_EXTENSION = so
+
+PRODUCT_NAME = $(TARGET_NAME)
+
+HEADER_SEARCH_PATHS = $(inherited) $(APPORTABLE_SDK)/sysroot/common/usr/include $(APPORTABLE_SDK)/sysroot/android/armeabi/usr/include  $(APPORTABLE_SDK)/sysroot/android/armeabi/usr/include/c++/llvm
+
+PRIVATE_HEADERS_FOLDER_PATH =
+
+PUBLIC_HEADERS_FOLDER_PATH =
+
+SKIP_INSTALL = YES
+
+MACH_O_TYPE = mh_execute
+
+GCC_PREFIX_HEADER =
+
+CLANG_ENABLE_OBJC_ARC = NO
