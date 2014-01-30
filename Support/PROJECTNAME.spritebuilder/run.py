@@ -11,4 +11,4 @@ build_dir = ref_dir + '/build/'
 #TODO figure out why transfer doesn't work. Try latest version
 #os.system(home + '/.apportable/SDK/bin/transfer ~/tmp/PROJECTNAME-debug.apk')
 os.system(home + '/.apportable/SDK/bin/adb install -r ' + build_dir + '/PROJECTNAME-debug.apk')
-os.system(home + '/.apportable/SDK/bin/adb shell am start -n com.apportable.PeevedPenguinsPaul/com.apportable.activity.VerdeActivity')
+os.system(home + '/.apportable/SDK/bin/adb shell am start -n com.apportable.SpriteBuilderApp/com.apportable.activity.VerdeActivity')
