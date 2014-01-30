@@ -15,7 +15,7 @@ import datetime
 
 home = os.environ['HOME'];
 
-os.system('touch ' + home + '/tmp/fooo')
+#os.system('touch ' + home + '/tmp/fooo')
 
 sdk = home + "/.apportable/"
 appName = "PROJECTNAME"
@@ -34,6 +34,12 @@ except KeyError:
 libverde = product_dir + "/PROJECTNAME-android"
 gdbserver = sdk + "toolchain/macosx/gdb/share/remote/android/arm/gdbserver"
 
+ref_dir = os.environ['SRCROOT'] + '/apportable-xcode'
+build_dir = ref_dir + '/build/'
+
+if not os.path.exists(build_dir):
+    os.makedirs(build_dir)
+
 # TODO transform Spin-Info.plist to Info.plist
 os.system('touch ' + home + '/tmp/fooo4')
 attribution = sdk + 'SDK/System/ATTRIBUTION.txt'
@@ -45,10 +51,8 @@ try:
 except OSError as e:
     pass
 
-os.system('touch ' + home + '/tmp/fooo5')
-
-target_dir = '/Users/paulbeusterien/ppp-unzip'
-zip = zipfile.ZipFile('/Users/paulbeusterien/tmp/' + appName + '-unaligned.apk', 'w', zipfile.ZIP_DEFLATED)
+target_dir = ref_dir + '/apk-seed'
+zip = zipfile.ZipFile(build_dir + appName + '-unaligned.apk', 'w', zipfile.ZIP_DEFLATED)
 rootlen = len(target_dir) + 1
 for base, dirs, files in os.walk(target_dir):
     for fi in files:
@@ -61,12 +65,11 @@ for so in sos:
 rootlen = len(product_dir) + 1
 for base, dirs, files in os.walk(product_dir):
     for file in files:
-        #        print 'file is ' + file
+         # TODO transform Spin-Info.plist to Info.plist
         if file == 'Info.plist':
-           zip.write('/Users/paulbeusterien/.apportable/SDK/Build/android-armeabi-debug/PeevedPenguinsPaul/tmp/assets/Info.plist', "assets/Info.plist")
+           zip.write(ref_dir + '/Info.plist', "assets/Info.plist")
         elif file.endswith('.nib'):
             print "nibs not yet supported"
-            zip.write('/Users/paulbeusterien/backup/assets-save/SpinViewController.xib', "assets/SpinViewController.xib")
         elif file != 'PROJECTNAME-android' and file != 'PkgInfo':
             fn = os.path.join(base, file)
             zip.write(fn, "assets/" + fn[rootlen:])
@@ -76,16 +79,11 @@ os.system('echo ' + gdbserver + ' > ' + home + '/tmp/fooo1')
 zip.write(gdbserver, "lib/armeabi/gdbserver")
 zip.write(libverde, "lib/armeabi/libverde.so")
 #zip.write('/Users/paulbeusterien/.apportable/SDK/Build/android-armeabi-debug/PROJECTNAME/tmp/lib/armeabi/libverde.so', "lib/armeabi/libverde.so")
-os.system('touch ' + home + '/tmp/fooo12')
 zip.write(attribution, "ATTRIBUTION.txt")
-os.system('touch ' + home + '/tmp/fooo13')
 zip.close()
-os.system('touch ' + home + '/tmp/fooo14')
-os.system('touch ' + home + '/tmp/fooo2')
-jarsigner = ['jarsigner', '-sigalg', 'MD5withRSA', '-digestalg', 'SHA1', '-storepass', 'android', '-keystore', home + '/.android/debug.keystore', home + '/tmp/' + appName + '-unaligned.apk', 'androiddebugkey']
+jarsigner = ['jarsigner', '-sigalg', 'MD5withRSA', '-digestalg', 'SHA1', '-storepass', 'android', '-keystore', home + '/.android/debug.keystore', build_dir + appName + '-unaligned.apk', 'androiddebugkey']
 os.system(' '.join(jarsigner))
-os.system('touch ' + home + '/tmp/fooo3')
 # TODO real spot for apk file for here and run script - use a directory available from env
-zipalign = [home + '/.apportable/SDK/toolchain/macosx/android-sdk/tools/zipalign', '-f', '4', home + '/tmp/' + appName + '-unaligned.apk', home + '/tmp/' + appName + '-debug.apk']
+zipalign = [home + '/.apportable/SDK/toolchain/macosx/android-sdk/tools/zipalign', '-f', '4', build_dir + appName + '-unaligned.apk', build_dir + appName + '-debug.apk']
 os.system(' '.join(zipalign))
 os.system('touch ' + home + '/tmp/fooo4')
